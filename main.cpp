@@ -5,6 +5,61 @@
 
 using namespace std;
 
+class Student
+{
+public:
+    string name;
+    string studentID;
+    string password;
+    string contactInfo;
+    int currentSemester;
+
+    Student()
+    {
+        currentSemester = 1;
+    }
+
+    void registerStudent()
+    {
+        cout << "\n===============================" << endl;
+        cout << "       Register Student  " << endl;
+        cout << "===============================" << endl;
+        cout << "Enter Name: ";
+        cin.ignore();
+        getline(cin, name);
+        cout << "Enter Student ID: ";
+        getline(cin, studentID);
+        cout << "Enter Password: ";
+        getline(cin, password);
+        cout << "Enter Contact Info: ";
+        getline(cin, contactInfo);
+
+        saveStudentData();
+    }
+
+    void saveStudentData()
+    {
+        ofstream file(studentID + ".txt");
+        if (file.is_open())
+        {
+            // Save student information with pipe delimiter (|) for easy parsing
+            file << name << "|"
+                 << studentID << "|"
+                 << password << "|"
+                 << contactInfo << "|"
+                 << currentSemester << "|";
+
+            file.close();
+            system("cls");
+            cout << "\nStudent registered successfully!" << endl;
+        }
+        else
+        {
+            cout << "Unable to open file." << endl;
+        }
+    }
+};
+
 class Admin
 {
 public:
@@ -20,6 +75,7 @@ public:
 int main()
 {
     Admin admin;
+    Student student;
     int choice, adminChoice;
     string username, password;
 
@@ -97,6 +153,7 @@ int main()
             }
             break;
         case 2:
+            student.registerStudent();
             break;
         case 3:
             break;
