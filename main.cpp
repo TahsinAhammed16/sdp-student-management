@@ -2,6 +2,7 @@
 #include <fstream> // For file input/output
 #include <string>
 #include <sstream> // For string stream operations
+#include <iomanip> // For setw()
 
 using namespace std;
 
@@ -19,6 +20,15 @@ public:
         currentSemester = 1;
     }
 
+    // Predefined four courses for six semesters with credit score
+    string predefinedCourses[6][4] = {
+        {"MAT101,3,Programming Fundamentals", "CSE101,3,Introduction to Computer Science", "CSE102,3,Data Structures", "PHY101,3,Physics I"},                // Semester 1
+        {"CSE201,3,Algorithms", "CSE202,3,Discrete Mathematics", "CSE203,3,Computer Organization", "CSE204,3,Operating Systems"},                            // Semester 2
+        {"CSE301,3,Database Management Systems", "CSE302,3,Object-Oriented Programming", "CSE303,3,Software Engineering", "CSE304,3,Computer Networks"},     // Semester 3
+        {"CSE401,3,Compiler Design", "CSE402,3,Theory of Computation", "CSE403,3,Artificial Intelligence", "CSE404,3,Machine Learning"},                     // Semester 4
+        {"CSE501,3,Cloud Computing", "CSE502,3,Mobile Computing", "CSE503,3,Data Science", "CSE504,3,Distributed Systems"},                                  // Semester 5
+        {"CSE601,3,Capstone Project", "CSE602,3,Advanced Topics in Computing", "CSE603,3,Specialization in Software Engineering", "CSE604,3,Data Analytics"} // Semester 6
+    };
     void registerStudent()
     {
         cout << "\n===============================" << endl;
@@ -91,6 +101,87 @@ public:
             return (id == studentID && pwd == password);
         }
         return false;
+    }
+
+    void registerForSemester()
+    {
+        system("cls");
+        cout << "\n==========================================================================" << endl;
+        cout << "                        Semester Registration" << endl;
+        cout << "==========================================================================" << endl;
+
+        if (currentSemester > 6)
+        {
+            cout << "All semesters are completed! Congratulations on finishing your program." << endl;
+            return;
+        }
+
+        string semesterNames[6] = {
+            "Semester 1: Foundation Courses",
+            "Semester 2: Core Programming",
+            "Semester 3: Data and Logic",
+            "Semester 4: Advanced Computing",
+            "Semester 5: Systems and Networks",
+            "Semester 6: Capstone and Specializations"};
+        cout << "You are currently eligible to register for " << semesterNames[currentSemester - 1] << "." << endl;
+
+        // Display each course with its details in a table-like format
+        cout << "\nCourses offered this semester:" << endl;
+        cout << "---------------------------------------------------------------" << endl;
+        cout << left << setw(15) << "Code" << setw(40) << "Title" << setw(10) << "Credits" << endl;
+        cout << "---------------------------------------------------------------" << endl;
+        for (int i = 0; i < 4; i++)
+        {
+            stringstream ss(predefinedCourses[currentSemester - 1][i]);
+            string courseCode, courseTitle, courseCredit;
+            getline(ss, courseCode, ',');
+            getline(ss, courseCredit, ',');
+            getline(ss, courseTitle, ',');
+
+            cout << left << setw(15) << courseCode << setw(40) << courseTitle << setw(10) << courseCredit << endl;
+        }
+        cout << "---------------------------------------------------------------" << endl;
+
+        // Ask if the student wants to register for this semester
+        string confirmation;
+        cout << "\nWould you like to register for this semester? (yes/no): ";
+        cin.ignore();
+        getline(cin, confirmation);
+        if (confirmation != "yes")
+        {
+            system("cls");
+            cout << "Registration for this semester is skipped. You can register later." << endl;
+            return;
+        }
+
+        system("cls");
+        cout << "---------------------------------------------------------------------------------" << endl;
+        cout << left << setw(15) << "Code" << setw(40) << "Title" << setw(10) << "Credits" << setw(15) << "Status" << endl;
+        cout << "---------------------------------------------------------------------------------" << endl;
+        for (int i = 0; i < 4; i++)
+        {
+            stringstream ss(predefinedCourses[currentSemester - 1][i]);
+            string courseCode, courseTitle, courseCredit;
+            getline(ss, courseCode, ',');
+            getline(ss, courseCredit, ',');
+            getline(ss, courseTitle, ',');
+
+            cout << left << setw(15) << courseCode << setw(40) << courseTitle << setw(10) << courseCredit << setw(15) << "Registered" << endl;
+        }
+        cout << "---------------------------------------------------------------------------------" << endl;
+        cout << "Registration for the semester is completed!" << endl;
+
+        currentSemester++;
+
+        // If there are more semesters, display the next semester
+        if (currentSemester < 6)
+        {
+            cout << "\nNext up: " << semesterNames[currentSemester] << "." << endl;
+        }
+        else
+        {
+            cout << "\nYou have completed all semesters!" << endl;
+        }
     }
 };
 
@@ -222,6 +313,7 @@ int main()
                     switch (studentChoice)
                     {
                     case 1:
+                        student.registerForSemester();
                         break;
                     case 2:
                         break;
