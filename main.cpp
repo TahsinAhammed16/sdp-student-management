@@ -1,10 +1,25 @@
 #include <iostream>
 #include <fstream> // For file input/output
 #include <string>
-#include <sstream> // For string stream operations
-#include <iomanip> // For setw()
+#include <sstream>   // For string stream operations
+#include <iomanip>   // For setw()
+#include <windows.h> // For sleep in showSpinner()
 
 using namespace std;
+
+void showSpinner()
+{
+    char spinner[] = {'|', '/', '-', '\\'};
+    int i = 0;
+    while (i < 10) // Run the spinner for 10 iterations (adjust as needed)
+    {
+        cout << "\rProcessing " << spinner[i % 4] << "   "; // Move cursor to start and show spinner
+        cout.flush();                                       // Flush the output buffer
+        Sleep(120);                                         // Sleep for 120 milliseconds
+        i++;
+    }
+    cout << endl; // Clear the spinner
+}
 
 class Student
 {
@@ -154,6 +169,8 @@ public:
             return;
         }
 
+        system("cls");
+        showSpinner();
         system("cls");
         cout << "---------------------------------------------------------------------------------" << endl;
         cout << left << setw(15) << "Code" << setw(40) << "Title" << setw(10) << "Credits" << setw(15) << "Status" << endl;
