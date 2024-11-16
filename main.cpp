@@ -4,7 +4,6 @@
 #include <sstream>   // For string stream operations
 #include <iomanip>   // For setw()
 #include <windows.h> // For sleep in showSpinner()
-
 using namespace std;
 
 void showSpinner()
@@ -19,6 +18,14 @@ void showSpinner()
         i++;
     }
     cout << endl; // Clear the spinner
+}
+
+void waitForEnterToGoBack()
+{
+    string dummy;
+    cout << "\n\nPress Enter to return to the main menu...";
+    getline(cin, dummy); // Waits for the user to press Enter
+    system("cls");
 }
 
 class Student
@@ -199,6 +206,7 @@ public:
         {
             cout << "\nYou have completed all semesters!" << endl;
         }
+        waitForEnterToGoBack();
     }
 };
 
