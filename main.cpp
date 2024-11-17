@@ -42,7 +42,15 @@ public:
         currentSemester = 1;
     }
 
-    // Predefined four courses for six semesters with credit score
+    // Predefined six semesters, each with four courses and fixed credit scores.
+    string semesterNames[6] = {
+        "Semester 1: Foundation Courses",
+        "Semester 2: Core Programming",
+        "Semester 3: Data and Logic",
+        "Semester 4: Advanced Computing",
+        "Semester 5: Systems and Networks",
+        "Semester 6: Capstone and Specializations"};
+
     string predefinedCourses[6][4] = {
         {"MAT101,3,Programming Fundamentals", "CSE101,3,Introduction to Computer Science", "CSE102,3,Data Structures", "PHY101,3,Physics I"},                // Semester 1
         {"CSE201,3,Algorithms", "CSE202,3,Discrete Mathematics", "CSE203,3,Computer Organization", "CSE204,3,Operating Systems"},                            // Semester 2
@@ -81,6 +89,38 @@ public:
                  << contactInfo << "|"
                  << currentSemester << "|";
 
+            // Extract only the course name from semesterNames
+            stringstream ssSemester(semesterNames[currentSemester - 1]);
+            string temp;
+            getline(ssSemester, temp, ':'); // This reads the "Semester X" part and ignores it
+            getline(ssSemester, temp, ' ');
+            getline(ssSemester, temp);      // This reads the course name part (after the colon)
+            file << temp;
+
+            // Save next semester number to the file
+            int nextSemester;
+            if (currentSemester < 6)
+            {
+                nextSemester = currentSemester + 1;
+            }
+            else
+            {
+                nextSemester = currentSemester; // No further semesters
+            }
+            file << "|" << nextSemester << "|";
+
+            for (int i = 0; i < 4; i++)
+            {
+                stringstream ss(predefinedCourses[currentSemester - 1][i]);
+                string courseCode, courseTitle, courseCredit;
+                getline(ss, courseCode, ',');
+                getline(ss, courseCredit, ',');
+                getline(ss, courseTitle, ',');
+
+                // Save the course information to the file
+                file << courseCode << "|" << courseTitle << "|" << courseCredit << "|";
+            }
+
             file.close();
             system("cls");
             cout << "\nStudent registered successfully!" << endl;
@@ -108,7 +148,6 @@ public:
             string semesterStr;
             getline(ss, semesterStr, '|');       // Read the semester as a string
             currentSemester = stoi(semesterStr); // Convert the semester string to an integer
-
             file.close();
             return true;
         }
@@ -138,13 +177,6 @@ public:
             return;
         }
 
-        string semesterNames[6] = {
-            "Semester 1: Foundation Courses",
-            "Semester 2: Core Programming",
-            "Semester 3: Data and Logic",
-            "Semester 4: Advanced Computing",
-            "Semester 5: Systems and Networks",
-            "Semester 6: Capstone and Specializations"};
         cout << "You are currently eligible to register for " << semesterNames[currentSemester - 1] << "." << endl;
 
         // Display each course with its details in a table-like format
@@ -200,13 +232,14 @@ public:
         // If there are more semesters, display the next semester
         if (currentSemester < 6)
         {
-            cout << "\nNext up: " << semesterNames[currentSemester] << "." << endl;
+            cout << "\nNext up: " << semesterNames[currentSemester - 1] << "." << endl;
         }
         else
         {
             cout << "\nYou have completed all semesters!" << endl;
         }
         waitForEnterToGoBack();
+        saveStudentData();
     }
 };
 
