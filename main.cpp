@@ -94,7 +94,7 @@ public:
             string temp;
             getline(ssSemester, temp, ':'); // This reads the "Semester X" part and ignores it
             getline(ssSemester, temp, ' ');
-            getline(ssSemester, temp);      // This reads the course name part (after the colon)
+            getline(ssSemester, temp); // This reads the course name part (after the colon)
             file << temp;
 
             // Save next semester number to the file
@@ -148,10 +148,66 @@ public:
             string semesterStr;
             getline(ss, semesterStr, '|');       // Read the semester as a string
             currentSemester = stoi(semesterStr); // Convert the semester string to an integer
+
+            string semesterName;
+            getline(ss, semesterName, '|');
+            semesterNames[currentSemester - 1] = semesterName;
+
+            string nextSemesterStr;
+            getline(ss, nextSemesterStr, '|');
+            // int nextSemester = stoi(nextSemesterStr);
+
+            for (int i = 0; i < 4; i++)
+            {
+                predefinedCourses[currentSemester - 1][i] = ""; // Clear any previous course data before reading new ones
+            }
+
+            // Read the courses for the current semester
+            for (int i = 0; i < 4; i++)
+            {
+                string courseCode, courseTitle, courseCredit;
+                getline(ss, courseCode, '|');
+                getline(ss, courseTitle, '|');
+                getline(ss, courseCredit, '|');
+
+                // Combine the course details and store in predefinedCourses
+                predefinedCourses[currentSemester - 1][i] = courseCode + "," + courseCredit + "," + courseTitle;
+            }
+
             file.close();
             return true;
         }
         return false; // Return false if the file cannot be opened
+    }
+
+    void displayPersonalInformation()
+    {
+        system("cls");
+        cout << "\n===============================" << endl;
+        cout << "       Personal Information     " << endl;
+        cout << "===============================" << endl;
+        cout << "Name: " << name << endl;
+        cout << "Student ID: " << studentID << endl;
+        cout << "Contact Info: " << contactInfo << endl;
+        cout << "Current Semester: (" << currentSemester << ") " << semesterNames[currentSemester - 1] << endl;
+        cout << "\n--------------------------------------------------" << endl;
+        cout << "Courses for Current Semester: " << endl;
+        cout << "--------------------------------------------------" << endl;
+
+        // Display current semester courses
+        for (int i = 0; i < 4; i++)
+        {
+            stringstream ss(predefinedCourses[currentSemester - 1][i]);
+            string courseCode, courseTitle, courseCredit;
+            getline(ss, courseCode, ',');
+            getline(ss, courseCredit, ',');
+            getline(ss, courseTitle, ',');
+            cout << "Course " << i + 1 << ": " << courseCode << " - " << courseTitle << " (" << courseCredit << " credits)" << endl;
+        }
+
+        cout << "\n--------------------------------------------------" << endl;
+        cin.ignore();
+        waitForEnterToGoBack();
     }
 
     // Function to handle login
@@ -171,7 +227,7 @@ public:
         cout << "                        Semester Registration" << endl;
         cout << "==========================================================================" << endl;
 
-        if (currentSemester > 6)
+        if (currentSemester >= 6)
         {
             cout << "All semesters are completed! Congratulations on finishing your program." << endl;
             return;
@@ -361,7 +417,7 @@ int main()
                     cout << "        Student Menu  " << endl;
                     cout << "===============================" << endl;
                     cout << "1. Semester Registration" << endl;
-                    cout << "2. View Enrolled Courses" << endl;
+                    cout << "2. View Personal Information" << endl;
                     cout << "3. View Marks and Grades" << endl;
                     cout << "4. Update Personal Information" << endl;
                     cout << "5. Log Out" << endl;
@@ -374,6 +430,10 @@ int main()
                         student.registerForSemester();
                         break;
                     case 2:
+                        cout << "\n===============================" << endl;
+                        cout << "    Personal Information       " << endl;
+                        cout << "===============================" << endl;
+                        student.displayPersonalInformation();
                         break;
                     case 3:
                         break;

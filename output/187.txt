@@ -1,1 +1,1 @@
-Tahsin Ahammed Alvi|187|1|01884679577|1|Advanced Computing|2|CSE401|Compiler Design|3|CSE402|Theory of Computation|3|CSE403|Artificial Intelligence|3|CSE404|Machine Learning|3|
+Tahsin Ahammed Alvi|187|22|01884679577|1|Foundation Courses|2|MAT101|Programming Fundamentals|3|CSE101|Introduction to Computer Science|3|CSE102|Data Structures|3|PHY101|Physics I|3|
