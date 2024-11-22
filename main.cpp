@@ -226,7 +226,8 @@ public:
         showSpinner();
         system("cls");
 
-        cout << "                                   \nGrade Sheet for Student ID: " << studentID << endl<<endl;
+        cout << "                                   \nGrade Sheet for Student ID: " << studentID << endl
+             << endl;
 
         cout << "\nCourse Marks and Grade Details:" << endl;
         cout << "-------------------------------------------------------------------------------------------------------" << endl;
@@ -398,11 +399,13 @@ public:
     }
 
     // Function to save marks to a file
-    void saveMarksToFile(string studentID)
+    void saveMarksToFile(string studentID, float attendance[], float quizzes[], float classTests[], float assignments[], float midTerm[], float finalExam[])
     {
-        ofstream marksFile(studentID + "_marks.txt", ios::out);
+        // Open the file to overwrite the marks
+        ofstream marksFile(studentID + "_marks.txt", ios::out); // Open file in overwrite mode
         if (marksFile.is_open())
         {
+            // Loop through the courses and save the data
             for (int i = 0; i < 4; i++)
             {
                 stringstream ss(predefinedCourses[currentSemester - 1][i]);
@@ -414,15 +417,14 @@ public:
                 marksFile << courseCode << " | "
                           << courseTitle << " | "
                           << courseCredit << " | "
-                          << attendance << " | "
-                          << quizzes << " | "
-                          << classTests << " | "
-                          << assignments << " | "
-                          << midTerm << " | "
-                          << finalExam << " |\n";
+                          << attendance[i] << " | "
+                          << quizzes[i] << " | "
+                          << classTests[i] << " | "
+                          << assignments[i] << " | "
+                          << midTerm[i] << " | "
+                          << finalExam[i] << " |\n";
             }
             marksFile.close();
-            cout << "Marks successfully saved to " << studentID << "_marks.txt" << endl;
         }
         else
         {
@@ -509,6 +511,9 @@ int main()
                         // Check if the student file exists
                         if (student.readStudentDataFromFile(studentID))
                         {
+                            float attendance[4], quizzes[4], classTests[4], assignments[4], midTerm[4], finalExam[4];
+
+                            // Loop through all 4 courses and get marks
                             for (int i = 0; i < 4; i++)
                             {
                                 stringstream ss(student.predefinedCourses[student.currentSemester - 1][i]);
@@ -517,32 +522,91 @@ int main()
                                 getline(ss, courseCredit, ',');
                                 getline(ss, courseTitle, ',');
 
-                                cout << "\nEnter marks for " << courseCode << " - " << courseTitle << ": ";
-                                cout << "\n------------------------------------------" << endl;
-                                cout << "Enter Attendance (out of 5): ";
-                                cin >> student.attendance;
-                                cout << "Enter Quizzes (out of 5): ";
-                                cin >> student.quizzes;
-                                cout << "Class Tests & Tutorial (out of 10): ";
-                                cin >> student.classTests;
-                                cout << "Assignment/Presentation/Lab/ Project (out of 10): ";
-                                cin >> student.assignments;
-                                cout << "Enter Mid-Term Exam score (out of 30): ";
-                                cin >> student.midTerm;
-                                cout << "Enter Final Exam score (out of 40): ";
-                                cin >> student.finalExam;
-                                cout << "------------------------------------------\n"
-                                     << endl;
+                                cout << "\n--------------------------------------------------" << endl;
+                                cout << "Course " << (i + 1) << ": " << courseCode << " - " << courseTitle << endl;
+                                cout << "--------------------------------------------------\n";
+
+                                // Input for attendance
+                                do
+                                {
+                                    cout << "Enter Attendance (out of 5): ";
+                                    cin >> attendance[i];
+                                    if (attendance[i] < 0 || attendance[i] > 5)
+                                    {
+                                        cout << "Invalid input! Attendance must be between 0 and 5." << endl;
+                                    }
+                                } while (attendance[i] < 0 || attendance[i] > 5);
+
+                                // Input for quizzes
+                                do
+                                {
+                                    cout << "Enter Quizzes (out of 5): ";
+                                    cin >> quizzes[i];
+                                    if (quizzes[i] < 0 || quizzes[i] > 5)
+                                    {
+                                        cout << "Invalid input! Quizzes must be between 0 and 5." << endl;
+                                    }
+                                } while (quizzes[i] < 0 || quizzes[i] > 5);
+
+                                // Input for class tests
+                                do
+                                {
+                                    cout << "Enter Class Tests & Tutorial (out of 10): ";
+                                    cin >> classTests[i];
+                                    if (classTests[i] < 0 || classTests[i] > 10)
+                                    {
+                                        cout << "Invalid input! Class Tests must be between 0 and 10." << endl;
+                                    }
+                                } while (classTests[i] < 0 || classTests[i] > 10);
+
+                                // Input for assignments/presentations
+                                do
+                                {
+                                    cout << "Enter Assignment/Presentation/Lab/Project (out of 10): ";
+                                    cin >> assignments[i];
+                                    if (assignments[i] < 0 || assignments[i] > 10)
+                                    {
+                                        cout << "Invalid input! Assignments must be between 0 and 10." << endl;
+                                    }
+                                } while (assignments[i] < 0 || assignments[i] > 10);
+
+                                // Input for mid-term exam
+                                do
+                                {
+                                    cout << "Enter Mid-Term Exam score (out of 30): ";
+                                    cin >> midTerm[i];
+                                    if (midTerm[i] < 0 || midTerm[i] > 30)
+                                    {
+                                        cout << "Invalid input! Mid-Term Exam must be between 0 and 30." << endl;
+                                    }
+                                } while (midTerm[i] < 0 || midTerm[i] > 30);
+
+                                // Input for final exam
+                                do
+                                {
+                                    cout << "Enter Final Exam score (out of 40): ";
+                                    cin >> finalExam[i];
+                                    if (finalExam[i] < 0 || finalExam[i] > 40)
+                                    {
+                                        cout << "Invalid input! Final Exam must be between 0 and 40." << endl;
+                                    }
+                                } while (finalExam[i] < 0 || finalExam[i] > 40);
+
+                                system("cls");
+                                cout << "\nMarks for " << courseCode << " - " << courseTitle << " successfully entered!" << endl;
+                                student.saveMarksToFile(studentID, attendance, quizzes, classTests, assignments, midTerm, finalExam);
+                                cin.ignore();
                             }
-                            student.saveMarksToFile(studentID);
-                            cout << "Marks set successfully!" << endl;
                         }
                         else
                         {
                             cout << "No student found with that ID." << endl;
                         }
+                        system("cls");
+                        cout << "All marks for Student ID: " << studentID << " have been successfully entered and saved!" << endl;
                         break;
                     }
+
                     case 3:
                         break;
                     case 4:
