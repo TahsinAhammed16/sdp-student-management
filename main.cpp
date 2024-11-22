@@ -36,7 +36,7 @@ public:
     string password;
     string contactInfo;
     int currentSemester;
-    int marks[4]; 
+    int marks[4];
     float attendance, quizzes, classTests, assignments, midTerm, finalExam;
 
     Student()
@@ -186,6 +186,99 @@ public:
         return false; // Return false if the file cannot be opened
     }
 
+    float calculateGradePoint(float marks)
+    {
+        if (marks >= 80)
+            return 4.0; // A+
+        else if (marks >= 75)
+            return 3.75; // A
+        else if (marks >= 70)
+            return 3.5; // A-
+        else if (marks >= 65)
+            return 3.25; // B+
+        else if (marks >= 60)
+            return 3.0; // B
+        else if (marks >= 55)
+            return 2.75; // B-
+        else if (marks >= 50)
+            return 2.5; // C+
+        else if (marks >= 45)
+            return 2.25; // C
+        else if (marks >= 40)
+            return 2.0; // D
+        else
+            return 0.0; // F
+    }
+
+    float calculateSGPAFromFile(string studentID)
+    {
+        ifstream marksFile(studentID + "_marks.txt");
+        if (!marksFile.is_open())
+        {
+            cout << "Error: Unable to open marks file for " << studentID << endl;
+            return 0.0;
+        }
+
+        string line;
+        float totalGradePoints = 0.0;
+        int totalCredits = 0;
+
+        showSpinner();
+        system("cls");
+
+        cout << "                                   \nGrade Sheet for Student ID: " << studentID << endl<<endl;
+
+        cout << "\nCourse Marks and Grade Details:" << endl;
+        cout << "-------------------------------------------------------------------------------------------------------" << endl;
+        cout << left << setw(10) << "Course" << setw(15) << "Credits" << setw(10) << "Attendance"
+             << setw(10) << "Quizzes" << setw(12) << "Class Tests" << setw(12) << "Assignments"
+             << setw(8) << "Midterm" << setw(10) << "Final" << setw(12) << "Total" << setw(12) << "Grade" << endl;
+        cout << "-------------------------------------------------------------------------------------------------------" << endl;
+
+        while (getline(marksFile, line))
+        {
+            stringstream ss(line);
+            string courseCode, courseTitle, courseCreditStr;
+            string attendanceStr, quizzesStr, classTestsStr, assignmentsStr, midTermStr, finalExamStr;
+
+            // Parse the line
+            getline(ss, courseCode, '|');
+            getline(ss, courseTitle, '|');
+            getline(ss, courseCreditStr, '|');
+
+            int courseCredit = stoi(courseCreditStr); // Convert course credit from string to int
+            totalCredits += courseCredit;
+
+            // Read marks as strings
+            getline(ss, attendanceStr, '|');
+            getline(ss, quizzesStr, '|');
+            getline(ss, classTestsStr, '|');
+            getline(ss, assignmentsStr, '|');
+            getline(ss, midTermStr, '|');
+            getline(ss, finalExamStr, '|');
+
+            // Convert from strings to floating-point numbers
+            float attendance = stof(attendanceStr);
+            float quizzes = stof(quizzesStr);
+            float classTests = stof(classTestsStr);
+            float assignments = stof(assignmentsStr);
+            float midTerm = stof(midTermStr);
+            float finalExam = stof(finalExamStr);
+
+            float totalMarks = attendance + quizzes + classTests + assignments + midTerm + finalExam;
+            float gradePoint = calculateGradePoint(totalMarks);
+            totalGradePoints += (gradePoint * courseCredit);
+
+            // Display course details in a formatted table
+            cout << left << setw(10) << courseCode << setw(15) << courseCreditStr << setw(10) << attendance
+                 << setw(10) << quizzes << setw(12) << classTests << setw(12) << assignments
+                 << setw(8) << midTerm << setw(10) << finalExam << setw(12) << totalMarks << setw(12) << calculateGradePoint(totalMarks) << endl;
+        }
+        cout << "-------------------------------------------------------------------------------------------------------" << endl;
+        marksFile.close();
+        return totalGradePoints / totalCredits;
+    }
+
     void displayPersonalInformation()
     {
         system("cls");
@@ -321,12 +414,12 @@ public:
                 marksFile << courseCode << " | "
                           << courseTitle << " | "
                           << courseCredit << " | "
-                          << attendance << " | "  
-                          << quizzes << " | "    
-                          << classTests << " | "  
-                          << assignments << " | " 
-                          << midTerm << " | "     
-                          << finalExam << " |\n"; 
+                          << attendance << " | "
+                          << quizzes << " | "
+                          << classTests << " | "
+                          << assignments << " | "
+                          << midTerm << " | "
+                          << finalExam << " |\n";
             }
             marksFile.close();
             cout << "Marks successfully saved to " << studentID << "_marks.txt" << endl;
@@ -453,7 +546,34 @@ int main()
                     case 3:
                         break;
                     case 4:
+                    {
+                        cout << "Enter Student ID to view profile/grade sheet: ";
+                        cin.ignore(); // Clear input buffer
+                        getline(cin, studentID);
+
+                        if (student.readStudentDataFromFile(studentID))
+                        {
+                            // Calculate SGPA
+                            float sgpa = student.calculateSGPAFromFile(studentID);
+
+                            if (sgpa > 0.0)
+                            {
+                                cout << "SGPA: " << fixed << setprecision(2) << sgpa << endl;
+                                waitForEnterToGoBack();
+                            }
+                            else
+                            {
+                                cout << "Failed to calculate SGPA. Please check the student data." << endl;
+                            }
+                        }
+                        else
+                        {
+                            cout << "Student not found." << endl;
+                        }
+                        system("cls");
                         break;
+                    }
+
                     case 5:
                         break;
                     case 6:

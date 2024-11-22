@@ -1,4 +1,4 @@
-CSE301 | Database Management Systems | 3 | 3 | 3 | 3 | 3 | 3 | 3 |
-CSE302 | Object-Oriented Programming | 3 | 3 | 3 | 3 | 3 | 3 | 3 |
-CSE303 | Software Engineering | 3 | 3 | 3 | 3 | 3 | 3 | 3 |
-CSE304 | Computer Networks | 3 | 3 | 3 | 3 | 3 | 3 | 3 |
+CSE301 | Database Management Systems | 3 | 3.06372e+034 | nan | 9.73294e-039 | 9.33158e+033 | 0 | 9.3316e+033 |
+CSE302 | Object-Oriented Programming | 3 | 3.06372e+034 | nan | 9.73294e-039 | 9.33158e+033 | 0 | 9.3316e+033 |
+CSE303 | Software Engineering | 3 | 3.06372e+034 | nan | 9.73294e-039 | 9.33158e+033 | 0 | 9.3316e+033 |
+CSE304 | Computer Networks | 3 | 3.06372e+034 | nan | 9.73294e-039 | 9.33158e+033 | 0 | 9.3316e+033 |
