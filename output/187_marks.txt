@@ -1,0 +1,4 @@
+CSE301 | Database Management Systems | 3 | 3 | 3 | 3 | 3 | 3 | 3 |
+CSE302 | Object-Oriented Programming | 3 | 3 | 3 | 3 | 3 | 3 | 3 |
+CSE303 | Software Engineering | 3 | 3 | 3 | 3 | 3 | 3 | 3 |
+CSE304 | Computer Networks | 3 | 3 | 3 | 3 | 3 | 3 | 3 |

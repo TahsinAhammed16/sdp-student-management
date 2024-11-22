@@ -36,10 +36,16 @@ public:
     string password;
     string contactInfo;
     int currentSemester;
+    int marks[4]; 
+    float attendance, quizzes, classTests, assignments, midTerm, finalExam;
 
     Student()
     {
         currentSemester = 1;
+        for (int i = 0; i < 4; i++)
+        {
+            marks[i] = 0; // Initialize marks array
+        }
     }
 
     // Predefined six semesters, each with four courses and fixed credit scores.
@@ -297,6 +303,39 @@ public:
         waitForEnterToGoBack();
         saveStudentData();
     }
+
+    // Function to save marks to a file
+    void saveMarksToFile(string studentID)
+    {
+        ofstream marksFile(studentID + "_marks.txt", ios::out);
+        if (marksFile.is_open())
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                stringstream ss(predefinedCourses[currentSemester - 1][i]);
+                string courseCode, courseTitle, courseCredit;
+                getline(ss, courseCode, ',');
+                getline(ss, courseCredit, ',');
+                getline(ss, courseTitle, ',');
+
+                marksFile << courseCode << " | "
+                          << courseTitle << " | "
+                          << courseCredit << " | "
+                          << attendance << " | "  
+                          << quizzes << " | "    
+                          << classTests << " | "  
+                          << assignments << " | " 
+                          << midTerm << " | "     
+                          << finalExam << " |\n"; 
+            }
+            marksFile.close();
+            cout << "Marks successfully saved to " << studentID << "_marks.txt" << endl;
+        }
+        else
+        {
+            cout << "Error: Unable to save marks to file." << endl;
+        }
+    }
 };
 
 class Admin
@@ -367,8 +406,50 @@ int main()
                     {
                     case 1:
                         break;
-                    case 2:
+                    case 2: // Admin sets marks for students
+                    {
+                        string studentID;
+                        cout << "Enter Student ID to set marks: ";
+                        cin.ignore();
+                        getline(cin, studentID);
+
+                        // Check if the student file exists
+                        if (student.readStudentDataFromFile(studentID))
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                stringstream ss(student.predefinedCourses[student.currentSemester - 1][i]);
+                                string courseCode, courseTitle, courseCredit;
+                                getline(ss, courseCode, ',');
+                                getline(ss, courseCredit, ',');
+                                getline(ss, courseTitle, ',');
+
+                                cout << "\nEnter marks for " << courseCode << " - " << courseTitle << ": ";
+                                cout << "\n------------------------------------------" << endl;
+                                cout << "Enter Attendance (out of 5): ";
+                                cin >> student.attendance;
+                                cout << "Enter Quizzes (out of 5): ";
+                                cin >> student.quizzes;
+                                cout << "Class Tests & Tutorial (out of 10): ";
+                                cin >> student.classTests;
+                                cout << "Assignment/Presentation/Lab/ Project (out of 10): ";
+                                cin >> student.assignments;
+                                cout << "Enter Mid-Term Exam score (out of 30): ";
+                                cin >> student.midTerm;
+                                cout << "Enter Final Exam score (out of 40): ";
+                                cin >> student.finalExam;
+                                cout << "------------------------------------------\n"
+                                     << endl;
+                            }
+                            student.saveMarksToFile(studentID);
+                            cout << "Marks set successfully!" << endl;
+                        }
+                        else
+                        {
+                            cout << "No student found with that ID." << endl;
+                        }
                         break;
+                    }
                     case 3:
                         break;
                     case 4:
