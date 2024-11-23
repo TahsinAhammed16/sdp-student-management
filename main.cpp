@@ -4,6 +4,7 @@
 #include <sstream>   // For string stream operations
 #include <iomanip>   // For setw()
 #include <windows.h> // For sleep in showSpinner()
+#include <conio.h>   // For _getch() on Windows
 using namespace std;
 
 void showSpinner()
@@ -26,6 +27,37 @@ void waitForEnterToGoBack()
     cout << "\n\nPress Enter to return to the main menu...";
     getline(cin, dummy); // Waits for the user to press Enter
     system("cls");
+}
+
+string getMaskedPassword()
+{
+    string password = ""; // Initialize an empty string to store the password
+    char ch;
+
+    while (true)
+    {
+        ch = _getch(); // Read character without displaying it
+
+        if (ch == 13)  // Check if the Enter key (ASCII value 13) is pressed
+        {
+            cout << endl;
+            break;
+        }
+        else if (ch == 8) // Check if the Backspace key (ASCII value 8) is pressed
+        {
+            if (!password.empty())  // Ensure the password is not empty before attempting to remove characters
+            {
+                cout << "\b \b"; 
+                password.pop_back();
+            }
+        }
+        else
+        {
+            cout << '*'; // Mask character
+            password += ch;
+        }
+    }
+    return password;
 }
 
 class Student
@@ -76,7 +108,7 @@ public:
         cout << "Enter Student ID: ";
         getline(cin, studentID);
         cout << "Enter Password: ";
-        getline(cin, password);
+        password = getMaskedPassword();
         cout << "Enter Contact Info: ";
         getline(cin, contactInfo);
 
@@ -474,7 +506,7 @@ int main()
             cin.ignore(); // To clear the input buffer
             getline(cin, username);
             cout << "Enter Admin Password: ";
-            getline(cin, password);
+            password = getMaskedPassword();
             if (admin.login(username, password))
             {
                 system("cls");
@@ -666,7 +698,7 @@ int main()
             cin.ignore();
             getline(cin, studentID);
             cout << "Enter Password: ";
-            getline(cin, password);
+            password = getMaskedPassword();
             system("cls");
             if (student.login(studentID, password))
             {
