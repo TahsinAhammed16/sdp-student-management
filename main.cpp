@@ -128,8 +128,7 @@ public:
             }
 
             file.close();
-            system("cls");
-            cout << "\nStudent registered successfully!" << endl;
+            waitForEnterToGoBack();
         }
         else
         {
@@ -330,10 +329,13 @@ public:
         if (currentSemester >= 6)
         {
             cout << "All semesters are completed! Congratulations on finishing your program." << endl;
+            cin.ignore();
+            waitForEnterToGoBack();
             return;
         }
 
-        cout << "You are currently eligible to register for " << semesterNames[currentSemester - 1] << "." << endl;
+        int displaySemester = currentSemester;
+        cout << "You are currently eligible to register for " << semesterNames[displaySemester - 1] << "." << endl;
 
         // Display each course with its details in a table-like format
         cout << "\nCourses offered this semester:" << endl;
@@ -342,7 +344,7 @@ public:
         cout << "---------------------------------------------------------------" << endl;
         for (int i = 0; i < 4; i++)
         {
-            stringstream ss(predefinedCourses[currentSemester - 1][i]);
+            stringstream ss(predefinedCourses[displaySemester][i]);
             string courseCode, courseTitle, courseCredit;
             getline(ss, courseCode, ',');
             getline(ss, courseCredit, ',');
@@ -363,7 +365,6 @@ public:
             cout << "Registration for this semester is skipped. You can register later." << endl;
             return;
         }
-
         system("cls");
         showSpinner();
         system("cls");
@@ -372,7 +373,7 @@ public:
         cout << "---------------------------------------------------------------------------------" << endl;
         for (int i = 0; i < 4; i++)
         {
-            stringstream ss(predefinedCourses[currentSemester - 1][i]);
+            stringstream ss(predefinedCourses[displaySemester][i]);
             string courseCode, courseTitle, courseCredit;
             getline(ss, courseCode, ',');
             getline(ss, courseCredit, ',');
@@ -384,18 +385,16 @@ public:
         cout << "Registration for the semester is completed!" << endl;
 
         currentSemester++;
-
+        saveStudentData();
         // If there are more semesters, display the next semester
         if (currentSemester < 6)
         {
-            cout << "\nNext up: " << semesterNames[currentSemester - 1] << "." << endl;
+            cout << "\nNext up: " << semesterNames[currentSemester] << "." << endl;
         }
         else
         {
             cout << "\nYou have completed all semesters!" << endl;
         }
-        waitForEnterToGoBack();
-        saveStudentData();
     }
 
     // Function to save marks to a file
