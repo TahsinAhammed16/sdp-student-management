@@ -1,4 +1,0 @@
-MAT101 | Programming Fundamentals | 3 | 4 | 4 | 8 | 8 | 26 | 33 |
-CSE101 | Introduction to Computer Science | 3 | 4 | 4 | 9 | 8 | 23 | 29 |
-CSE102 | Data Structures | 3 | 4 | 5 | 9 | 9 | 27 | 32 |
-PHY101 | Physics I | 3 | 4 | 5 | 8 | 8 | 27 | 32 |

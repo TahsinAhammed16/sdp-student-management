@@ -321,7 +321,64 @@ public:
         }
         cout << "-------------------------------------------------------------------------------------------------------" << endl;
         marksFile.close();
-        return totalGradePoints / totalCredits;
+
+        float sgpa = totalGradePoints / totalCredits;
+
+        // Save SGPA to the file
+        saveSGPA(studentID, sgpa, currentSemester);
+
+        return sgpa;
+    }
+
+    void saveSGPA(string studentID, float sgpa, int currentSemester)
+    {
+        ofstream sgpaFile(studentID + "_sgpa.txt", ios::app);
+        if (sgpaFile.is_open())
+        {
+            sgpaFile << currentSemester << "|" << sgpa << "\n";
+            sgpaFile.close();
+        }
+        else
+        {
+            cout << "Error: Unable to open SGPA file for " << studentID << endl;
+        }
+    }
+
+    float calculateCGPA(string studentID)
+    {
+        ifstream sgpaFile(studentID + "_sgpa.txt");
+        if (!sgpaFile.is_open())
+        {
+            cout << "Error: Unable to open SGPA file for " << studentID << endl;
+            return 0.0;
+        }
+
+        string line;
+        float totalSGPA = 0.0;
+        int totalSemesters = 0;
+
+        while (getline(sgpaFile, line))
+        {
+            stringstream ss(line);
+            string semesterStr, sgpaStr;
+
+            getline(ss, semesterStr, '|');
+            getline(ss, sgpaStr, '|');
+
+            float sgpa = stof(sgpaStr);
+            totalSGPA += sgpa;
+            totalSemesters++;
+        }
+
+        sgpaFile.close();
+
+        if (totalSemesters == 0)
+        {
+            cout << "No SGPA data found!" << endl;
+            return 0.0;
+        }
+
+        return totalSGPA / totalSemesters;
     }
 
     void displayPersonalInformation()
@@ -731,10 +788,12 @@ int main()
                         {
                             // Calculate SGPA
                             float sgpa = student.calculateSGPAFromFile(studentID);
+                            float cgpa = student.calculateCGPA(studentID);
 
                             if (sgpa > 0.0)
                             {
                                 cout << "SGPA: " << fixed << setprecision(2) << sgpa << endl;
+                                cout << "CGPA: " << fixed << setprecision(2) << cgpa << endl;
                                 waitForEnterToGoBack();
                             }
                             else
