@@ -38,16 +38,16 @@ string getMaskedPassword()
     {
         ch = _getch(); // Read character without displaying it
 
-        if (ch == 13)  // Check if the Enter key (ASCII value 13) is pressed
+        if (ch == 13) // Check if the Enter key (ASCII value 13) is pressed
         {
             cout << endl;
             break;
         }
         else if (ch == 8) // Check if the Backspace key (ASCII value 8) is pressed
         {
-            if (!password.empty())  // Ensure the password is not empty before attempting to remove characters
+            if (!password.empty()) // Ensure the password is not empty before attempting to remove characters
             {
-                cout << "\b \b"; 
+                cout << "\b \b";
                 password.pop_back();
             }
         }
@@ -160,6 +160,19 @@ public:
             }
 
             file.close();
+
+            // After saving the student data, store their ID in all_students.txt for viewAllRegisteredStudents()
+            ofstream allStudentsFile("all_students.txt", ios::app);
+            if (allStudentsFile.is_open())
+            {
+                allStudentsFile << studentID << endl;
+                allStudentsFile.close();
+            }
+            else
+            {
+                cout << "Unable to open all_students.txt to save student ID!" << endl;
+            }
+
             waitForEnterToGoBack();
         }
         else
@@ -474,6 +487,73 @@ public:
     {
         return (username == adminUsername && password == adminPassword);
     }
+
+    void viewAllRegisteredStudents()
+    {
+        ifstream file("all_students.txt"); // Open the file that contains all student IDs
+        if (file.is_open())
+        {
+            string studentID;
+            int serialNumber = 1;
+
+            cout << " \n                                                All Registered Students    \n"
+                 << endl;
+            cout << "-------------------------------------------------------------------------------------------------------------------" << endl;
+            cout << left << setw(5) << "S.No"
+                 << setw(30) << "Name"
+                 << setw(15) << "Student ID"
+                 << setw(20) << "Contact Info"
+                 << setw(20) << "Current Semester"
+                 << setw(30) << "Semester Name"
+                 << endl;
+            cout << "-------------------------------------------------------------------------------------------------------------------" << endl;
+
+            while (getline(file, studentID)) // Read each student ID from the file
+            {
+                ifstream studentFile(studentID + ".txt");
+                if (studentFile.is_open())
+                {
+                    string line;
+                    string name, id, pass, contactInfo, semesterNo, semesterName;
+
+                    // Read the first line (student data)
+                    getline(studentFile, line);
+                    stringstream ss(line);
+
+                    getline(ss, name, '|');
+                    getline(ss, id, '|');
+                    getline(ss, pass, '|'); // Password is not used
+                    getline(ss, contactInfo, '|');
+                    getline(ss, semesterNo, '|');
+                    getline(ss, semesterName, '|');
+
+                    cout << left << setw(5) << serialNumber
+                         << setw(30) << name
+                         << setw(15) << id
+                         << setw(20) << contactInfo
+                         << setw(20) << semesterNo
+                         << setw(30) << semesterName
+                         << endl;
+
+                    serialNumber++;
+                    studentFile.close(); // Close individual student file
+                    cout << "-------------------------------------------------------------------------------------------------------------------" << endl;
+                }
+                else
+                {
+                    cout << "Unable to open file for Student ID: " << studentID << endl;
+                }
+            }
+
+            file.close(); // Close the file with all student IDs
+        }
+        else
+        {
+            cout << "Unable to open the all_students.txt file!" << endl;
+        }
+        cin.ignore();
+        waitForEnterToGoBack();
+    }
 };
 
 int main()
@@ -639,6 +719,7 @@ int main()
                     }
 
                     case 3:
+                        admin.viewAllRegisteredStudents();
                         break;
                     case 4:
                     {
