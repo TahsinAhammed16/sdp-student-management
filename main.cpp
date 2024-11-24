@@ -384,16 +384,15 @@ public:
     void displayPersonalInformation()
     {
         system("cls");
-        cout << "\n===============================" << endl;
-        cout << "       Personal Information     " << endl;
-        cout << "===============================" << endl;
-        cout << "Name: " << name << endl;
+
+        cout << "\n                                     Personal Information     " << endl;
+        cout << "\nName: " << name << endl;
         cout << "Student ID: " << studentID << endl;
         cout << "Contact Info: " << contactInfo << endl;
         cout << "Current Semester: (" << currentSemester << ") " << semesterNames[currentSemester - 1] << endl;
-        cout << "\n--------------------------------------------------" << endl;
+        cout << "\n-------------------------------------------------------------------" << endl;
         cout << "Courses for Current Semester: " << endl;
-        cout << "--------------------------------------------------" << endl;
+        cout << "-------------------------------------------------------------------" << endl;
 
         // Display current semester courses
         for (int i = 0; i < 4; i++)
@@ -406,7 +405,7 @@ public:
             cout << "Course " << i + 1 << ": " << courseCode << " - " << courseTitle << " (" << courseCredit << " credits)" << endl;
         }
 
-        cout << "\n--------------------------------------------------" << endl;
+        cout << "\n-------------------------------------------------------------------" << endl;
         cin.ignore();
         waitForEnterToGoBack();
     }
@@ -437,7 +436,7 @@ public:
         }
 
         int displaySemester = currentSemester;
-        cout << "You are currently eligible to register for " << semesterNames[displaySemester - 1] << "." << endl;
+        cout << "You are currently eligible to register for " << semesterNames[displaySemester] << "." << endl;
 
         // Display each course with its details in a table-like format
         cout << "\nCourses offered this semester:" << endl;
@@ -647,6 +646,8 @@ int main()
             if (admin.login(username, password))
             {
                 system("cls");
+                showSpinner();
+                system("cls");
                 cout << "Admin logged in successfully!" << endl;
                 bool isAdminLoggedIn = true; // Boolean flag to control the loop
                 while (isAdminLoggedIn)
@@ -658,8 +659,8 @@ int main()
                     cout << "2. Set Marks for Students" << endl;
                     cout << "3. View All Registered Student Records" << endl;
                     cout << "4. Display Individual Student Profile/Generate Grade Sheet" << endl;
-                    cout << "5. Update Student Data" << endl;
-                    cout << "6. Delete Student Data" << endl;
+                    cout << "5. Update Student Data (not implemented yet) " << endl;
+                    cout << "6. Delete Student Data (not implemented yet) " << endl;
                     cout << "7. Log Out" << endl;
                     cout << "\nEnter your choice: ";
                     cin >> adminChoice;
@@ -668,6 +669,7 @@ int main()
                     switch (adminChoice)
                     {
                     case 1:
+                        student.registerStudent();
                         break;
                     case 2: // Admin sets marks for students
                     {
@@ -840,6 +842,8 @@ int main()
             cout << "Enter Password: ";
             password = getMaskedPassword();
             system("cls");
+            showSpinner();
+            system("cls");
             if (student.login(studentID, password))
             {
                 system("cls");
@@ -855,7 +859,7 @@ int main()
                     cout << "1. Semester Registration" << endl;
                     cout << "2. View Personal Information" << endl;
                     cout << "3. View Marks and Grades" << endl;
-                    cout << "4. Update Personal Information" << endl;
+                    cout << "4. Update Personal Information (not implemented yet) " << endl;
                     cout << "5. Log Out" << endl;
                     cout << "\nEnter your choice: ";
                     cin >> studentChoice;
@@ -872,7 +876,37 @@ int main()
                         student.displayPersonalInformation();
                         break;
                     case 3:
+                    {
+                        system("cls");
+                        cout << "Enter Student ID to view profile/grade sheet: ";
+                        cin.ignore(); // Clear input buffer
+                        getline(cin, studentID);
+
+                        if (student.readStudentDataFromFile(studentID))
+                        {
+                            // Calculate SGPA
+                            float sgpa = student.calculateSGPAFromFile(studentID);
+                            float cgpa = student.calculateCGPA(studentID);
+
+                            if (sgpa > 0.0)
+                            {
+                                cout << "SGPA: " << fixed << setprecision(2) << sgpa << endl;
+                                cout << "CGPA: " << fixed << setprecision(2) << cgpa << endl;
+                                waitForEnterToGoBack();
+                            }
+                            else
+                            {
+                                cout << "Failed to calculate SGPA. Please check the student data." << endl;
+                            }
+                        }
+                        else
+                        {
+                            cout << "Student not found." << endl;
+                        }
+                        system("cls");
                         break;
+                    }
+
                     case 4:
                         break;
                     case 5:
