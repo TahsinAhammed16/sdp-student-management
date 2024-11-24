@@ -1,4 +1,0 @@
-CSE201 | Algorithms | 3 | 4 | 5 | 8 | 8 | 26 | 27 |
-CSE202 | Discrete Mathematics | 3 | 4 | 4 | 7 | 8 | 27 | 33 |
-CSE203 | Computer Organization | 3 | 4 | 5 | 8 | 7 | 27 | 33 |
-CSE204 | Operating Systems | 3 | 4 | 5 | 7 | 7 | 27 | 33 |

@@ -357,6 +357,11 @@ public:
         float totalSGPA = 0.0;
         int totalSemesters = 0;
 
+        int semesters[20]; // Store semester numbers
+        float sgpas[20];   // Store SGPA for each semester
+
+        int count = 0; 
+
         while (getline(sgpaFile, line))
         {
             stringstream ss(line);
@@ -365,9 +370,31 @@ public:
             getline(ss, semesterStr, '|');
             getline(ss, sgpaStr, '|');
 
+            int semester = stoi(semesterStr);
             float sgpa = stof(sgpaStr);
-            totalSGPA += sgpa;
-            totalSemesters++;
+
+            bool isDuplicate = false;
+
+            // Check if the semester already exists in the array (duplicate check)
+            for (int i = 0; i < count; i++)
+            {
+                if (semesters[i] == semester)
+                {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+
+            // If it's not a duplicate, add it to the arrays
+            if (!isDuplicate)
+            {
+                semesters[count] = semester;
+                sgpas[count] = sgpa;
+
+                totalSGPA += sgpa;
+                totalSemesters++;
+                count++;
+            }
         }
 
         sgpaFile.close();
@@ -536,8 +563,8 @@ public:
 class Admin
 {
 public:
-    string adminUsername = "a";
-    string adminPassword = "a";
+    string adminUsername = "admin";
+    string adminPassword = "admin";
 
     bool login(string username, string password)
     {
