@@ -549,10 +549,13 @@ public:
         ifstream file("all_students.txt"); // Open the file that contains all student IDs
         if (file.is_open())
         {
+            string studentIDs[100]; // Array to store student IDs (adjust size based on your needs)
+            int count = 0;          // Count of unique student IDs
+
             string studentID;
             int serialNumber = 1;
 
-            cout << " \n                                                All Registered Students    \n"
+            cout << "\n                                                All Registered Students    \n"
                  << endl;
             cout << "-------------------------------------------------------------------------------------------------------------------" << endl;
             cout << left << setw(5) << "S.No"
@@ -566,47 +569,65 @@ public:
 
             while (getline(file, studentID)) // Read each student ID from the file
             {
-                ifstream studentFile(studentID + ".txt");
-                if (studentFile.is_open())
+                bool isDuplicate = false;
+
+                // Check for duplicates
+                for (int i = 0; i < count; i++)
                 {
-                    string line;
-                    string name, id, pass, contactInfo, semesterNo, semesterName;
-
-                    // Read the first line (student data)
-                    getline(studentFile, line);
-                    stringstream ss(line);
-
-                    getline(ss, name, '|');
-                    getline(ss, id, '|');
-                    getline(ss, pass, '|'); // Password is not used
-                    getline(ss, contactInfo, '|');
-                    getline(ss, semesterNo, '|');
-                    getline(ss, semesterName, '|');
-
-                    cout << left << setw(5) << serialNumber
-                         << setw(30) << name
-                         << setw(15) << id
-                         << setw(20) << contactInfo
-                         << setw(20) << semesterNo
-                         << setw(30) << semesterName
-                         << endl;
-
-                    serialNumber++;
-                    studentFile.close(); // Close individual student file
-                    cout << "-------------------------------------------------------------------------------------------------------------------" << endl;
+                    if (studentIDs[i] == studentID)
+                    {
+                        isDuplicate = true;
+                        break;
+                    }
                 }
-                else
+
+                if (!isDuplicate)
                 {
-                    cout << "Unable to open file for Student ID: " << studentID << endl;
+                    // Store the new unique student ID
+                    studentIDs[count++] = studentID;
+
+                    ifstream studentFile(studentID + ".txt");
+                    if (studentFile.is_open())
+                    {
+                        string line;
+                        string name, id, pass, contactInfo, semesterNo, semesterName;
+
+                        // Read the first line (student data)
+                        getline(studentFile, line);
+                        stringstream ss(line);
+
+                        getline(ss, name, '|');
+                        getline(ss, id, '|');
+                        getline(ss, pass, '|'); // Password is not used
+                        getline(ss, contactInfo, '|');
+                        getline(ss, semesterNo, '|');
+                        getline(ss, semesterName, '|');
+
+                        cout << left << setw(5) << serialNumber
+                             << setw(30) << name
+                             << setw(15) << id
+                             << setw(20) << contactInfo
+                             << setw(20) << semesterNo
+                             << setw(30) << semesterName
+                             << endl;
+                        cout << "-------------------------------------------------------------------------------------------------------------------" << endl;
+
+                        serialNumber++;
+                        studentFile.close(); // Close individual student file
+                    }
+                    else
+                    {
+                        cout << "Unable to open file for Student ID: " << studentID << endl;
+                    }
                 }
             }
-
             file.close(); // Close the file with all student IDs
         }
         else
         {
             cout << "Unable to open the all_students.txt file!" << endl;
         }
+
         cin.ignore();
         waitForEnterToGoBack();
     }
